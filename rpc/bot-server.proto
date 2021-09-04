@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package botserver;
+option go_package = "botserver/";
+
+service BotServer {
+  // 疎通テスト用
+  rpc Test (TestRequest) returns (TestReply) {}
+}
+
+message TestRequest {
+  string id = 1;
+}
+
+message TestReply {
+  string data = 1;
+}
