@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-package botserver;
-option go_package = "botserver/";
+package trigger;
+option go_package = "trigger/";
 
-service BotServer {
+service Trigger {
   // 疎通テスト用
   rpc Test (TestRequest) returns (TestReply) {}
 }

@@ -1,4 +1,4 @@
-module github.com/coacer/line-bot-demo/services/bot-server
+module trigger
 
 go 1.17
 
@@ -8,9 +8,7 @@ require (
 )
 
 require (
-	github.com/fullstorydev/grpcurl v1.8.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/jhump/protoreflect v1.9.0 // indirect
 	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4 // indirect
 	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
 	golang.org/x/text v0.3.6 // indirect

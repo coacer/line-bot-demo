@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trigger
+  labels:
+    project: line-bot-demo
+    app: trigger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trigger
+  template:
+    metadata:
+      labels:
+        app: trigger
+    spec:
+      containers:
+      - name: trigger
+        imagePullPolicy: Never
+        image: line-bot-demo_trigger:latest
+        ports:
+        - containerPort: 5000
