@@ -1,0 +1,30 @@
+version: '3'
+services:
+  db:
+    image: gcr.io/cloud-spanner-emulator/emulator
+    ports:
+    - "9010:9010"
+    - "9020:9020"
+
+  api:
+    build: ./services/api
+    restart: on-failure
+    ports:
+    - "8080:8080"
+    volumes:
+    - ./services/api:/usr/src/app
+    - ./rpc:/usr/src/app/rpc
+    env_file:
+    - ./config/.env.local
+
+  trigger:
+    build: 
+      context: "./services/trigger"
+      dockerfile: "Dockerfile.local"
+    ports:
+    - "5000:5000"
+    volumes:
+    - ./services/trigger:/go/src
+    - ${HOME}/go/bin/air:/go/bin/air
+    env_file:
+    - ./config/.env.local
