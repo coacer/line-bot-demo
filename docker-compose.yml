@@ -6,6 +6,45 @@ services:
     - "9010:9010"
     - "9020:9020"
 
+  gcloud-spanner-init:
+    image: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    env_file:
+    - ./config/.env.local
+    command: >
+     bash -c 'gcloud config configurations create emulator &&
+             gcloud config set auth/disable_credentials true &&
+             gcloud config set project $${GCP_PROJECT_ID} &&
+             gcloud config set api_endpoint_overrides/spanner http://$${DB_HOST}:$${DB_PORT}/ &&
+             gcloud config set auth/disable_credentials true &&
+             gcloud spanner instances create $${DB_INSTANCE_NAME} --config=emulator-config --description=Emulator --nodes=1'
+    depends_on:
+      - db
+
+  spanner-cli:
+    image: sjdaws/spanner-cli:latest
+    env_file:
+    - ./config/.env.local
+    environment:
+      SPANNER_EMULATOR_HOST: "db:9010"
+    command: ['sh', '-c', 'echo this container keep running && tail -f /dev/null']
+
+  wrench-crearte:
+    image: mercari/wrench
+    env_file:
+    - ./config/.env.local
+    command: "create --directory /migrations"
+    environment:
+      SPANNER_PROJECT_ID: "local"
+      SPANNER_INSTANCE_ID: "local-instance"
+      SPANNER_DATABASE_ID: "line-bot"
+      SPANNER_EMULATOR_HOST: "db:9010"
+      SPANNER_EMULATOR_URL: "http://db:9020/"
+    volumes:
+      - ./db/migrations:/migrations
+    restart: on-failure
+    depends_on:
+      - gcloud-spanner-init
+
   api:
     build: ./services/api
     restart: on-failure
