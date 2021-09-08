@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package channel;
+option go_package = "channel/";
+
+service Channel {
+  // 疎通テスト用
+  rpc Test (TestRequest) returns (TestReply) {}
+
+  rpc Get (GetRequest) returns (GetReply) {}
+  rpc Create (CreateRequest) returns (CreateReply) {}
+}
+
+message ChannelModel {
+  int64 id = 1;
+  string channelId = 2;
+  string channelSecretId = 3;
+  string channelAccessToken = 4;
+  string createdAt = 5;
+  string updatedAt = 6;
+}
+
+message TestRequest {
+  string id = 1;
+}
+
+message TestReply {
+  string data = 1;
+}
+
+message GetRequest {
+  int64 id = 1;
+}
+
+message GetReply {
+  ChannelModel channel = 1;
+}
+
+message CreateRequest {
+  string channelId = 1;
+  string channelSecretId = 2;
+  string channelAccessToken = 3;
+}
+
+message CreateReply {
+  ChannelModel channel = 1;
+}

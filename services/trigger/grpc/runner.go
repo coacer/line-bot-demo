@@ -1,6 +1,7 @@
 package grpc
 
 import (
+	"fmt"
 	"log"
 	"net"
 
@@ -20,7 +21,7 @@ func NewRunner(port string, server trigger.TriggerServer) *Runner {
 }
 
 func (r *Runner) Start() error {
-	lis, err := net.Listen("tcp", r.port)
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", r.port))
 	if err != nil {
 		return err
 	}

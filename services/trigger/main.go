@@ -2,18 +2,15 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"trigger/grpc"
 	"trigger/trigger"
 )
 
-const (
-	port = ":5000"
-)
-
 func main() {
 	t := trigger.New()
-	s := grpc.NewRunner(port, t)
+	s := grpc.NewRunner(os.Getenv("TRIGGER_PORT"), t)
 	if err := s.Start(); err != nil {
 		log.Fatalln(err)
 	}

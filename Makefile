@@ -14,7 +14,7 @@ local/db-connect:
 	@docker-compose exec spanner-cli spanner-cli -p local -i local-instance -d line-bot
 
 local/yo:
-	@SPANNER_EMULATOR_HOST=localhost:9010 && yo local local-instance line-bot -o ./db/models/golang
+	@SPANNER_EMULATOR_HOST=localhost:9010 yo local local-instance line-bot -o ./db/models/golang
 
 api/build:
 	@docker build -t line-bot-demo_api ./services/api/
@@ -24,4 +24,7 @@ trigger/protoc:
 
 trigger/build:
 	@docker build -t line-bot-demo_trigger ./services/trigger/
+
+channel/protoc:
+	@protoc -I./rpc ./rpc/channel.proto --go_out=plugins=grpc:./services/channel/
 

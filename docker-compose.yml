@@ -64,6 +64,18 @@ services:
     - "5000:5000"
     volumes:
     - ./services/trigger:/go/src
-    - ${HOME}/go/bin/air:/go/bin/air
+    - ./db/models:/go/src/models
+    env_file:
+    - ./config/.env.local
+
+  channel:
+    build: 
+      context: "./services/channel"
+      dockerfile: "Dockerfile.local"
+    ports:
+    - "6000:6000"
+    volumes:
+    - ./services/channel:/go/src
+    - ./db/models:/go/src/models
     env_file:
     - ./config/.env.local

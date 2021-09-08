@@ -1,11 +1,13 @@
 FROM golang:1.17.0 as builder
 
 WORKDIR /go/src
+ARG WORK_DIR=./services/trigger
 
-COPY go.mod go.sum ./
+COPY $WORK_DIR/go.mod $WORK_DIR/go.sum ./
 RUN go mod download
 
-COPY ./  ./
+COPY $WORK_DIR  ./
+COPY ./db/models ./models
 
 ARG CGO_ENABLED=0
 ARG GOOS=linux
