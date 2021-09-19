@@ -7,4 +7,4 @@ COPY ./src ./src
 COPY ./server.js ./server.js
 
 EXPOSE 8080
-CMD [ "node", "server.js" ]
+CMD [ "npm", "run", "start" ]

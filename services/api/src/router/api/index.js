@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 module.exports = router;
+const errorHandler404 = require('../../middleware/errorHandler404');
+const errorHandler = require('../../middleware/errorHandler');
 
 const Trigger = require('../../libs/trigger');
 
@@ -15,3 +17,8 @@ router.get('/test', async (req, res) => {
   console.log('result: ', result);
   return res.json(result);
 });
+
+router.use('/channel', require('./channel'));
+
+router.use(errorHandler404);
+router.use(errorHandler);

@@ -1,5 +1,5 @@
 CREATE TABLE LineBotChannel (
-    Id                 INT64 NOT NULL,
+    Id                 STRING(128) NOT NULL,
     ChannelId          STRING(MAX) NOT NULL,
     ChannelSecretId    STRING(MAX) NOT NULL,
     ChannelAccessToken STRING(MAX) NOT NULL,
@@ -8,8 +8,8 @@ CREATE TABLE LineBotChannel (
 ) PRIMARY KEY (Id);
 
 CREATE TABLE User (
-    Id                INT64 NOT NULL,
-    LineBotChannelId  INT64 NOT NULL,
+    Id                STRING(128) NOT NULL,
+    LineBotChannelId  STRING(128) NOT NULL,
     LineUID           STRING(MAX) NOT NULL,
     CreatedAt          TIMESTAMP NOT NULL OPTIONS ( allow_commit_timestamp = true ),
     UpdatedAt          TIMESTAMP NOT NULL OPTIONS ( allow_commit_timestamp = true ),
@@ -17,8 +17,8 @@ CREATE TABLE User (
 ) PRIMARY KEY (Id);
 
 CREATE TABLE UserEvent (
-    Id                INT64 NOT NULL,
-    UserId            INT64 NOT NULL,
+    Id                STRING(128) NOT NULL,
+    UserId            STRING(128) NOT NULL,
     Type              STRING(256) NOT NULL,
     Content           STRING(MAX) NOT NULL,
     CreatedAt          TIMESTAMP NOT NULL OPTIONS ( allow_commit_timestamp = true ),

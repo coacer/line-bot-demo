@@ -13,6 +13,7 @@ class Proto {
     }
   ) {
     this.name = null;
+    this.config = { HOST: null, PORT: null };
     this.options = options;
     this.client = null;
   }
@@ -24,19 +25,19 @@ class Proto {
     const packageDefinition = protoLoader.loadSync(PROTO_PATH, this.options);
     this.proto = grpc.loadPackageDefinition(packageDefinition);
     this.client = new this.proto[lowercaseName][this.name](
-      `${process.env.TRIGGER_HOST}:${process.env.TRIGGER_PORT}`,
+      `${this.config.HOST}:${this.config.PORT}`,
       grpc.credentials.createInsecure()
     );
   }
 
   invoke(fn, args) {
     return new Promise((resolve, reject) => {
-      console.log(`Invoke ${this.name}.${fn}`);
       try {
         if (!this.client) throw new Error('Not load client.');
         this.client[fn](args, (err, res) => {
+          console.log(`Invoke ${this.name}.${fn}`);
           if (err) {
-            throw err;
+            reject(err);
           } else {
             resolve(res);
           }

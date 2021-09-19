@@ -18,7 +18,7 @@ services:
              gcloud config set auth/disable_credentials true &&
              gcloud spanner instances create $${DB_INSTANCE_NAME} --config=emulator-config --description=Emulator --nodes=1'
     depends_on:
-      - db
+    - db
 
   spanner-cli:
     image: sjdaws/spanner-cli:latest
@@ -28,7 +28,7 @@ services:
       SPANNER_EMULATOR_HOST: "db:9010"
     command: ['sh', '-c', 'echo this container keep running && tail -f /dev/null']
 
-  wrench-crearte:
+  wrench-create:
     image: mercari/wrench
     env_file:
     - ./config/.env.local
@@ -40,10 +40,11 @@ services:
       SPANNER_EMULATOR_HOST: "db:9010"
       SPANNER_EMULATOR_URL: "http://db:9020/"
     volumes:
-      - ./db/migrations:/migrations
+    - ./db/migrations:/migrations
     restart: on-failure
     depends_on:
-      - gcloud-spanner-init
+      gcloud-spanner-init:
+        condition: service_completed_successfully
 
   api:
     build: ./services/api
@@ -64,7 +65,6 @@ services:
     - "5000:5000"
     volumes:
     - ./services/trigger:/go/src
-    - ./db/models:/go/src/models
     env_file:
     - ./config/.env.local
 
@@ -76,6 +76,5 @@ services:
     - "6000:6000"
     volumes:
     - ./services/channel:/go/src
-    - ./db/models:/go/src/models
     env_file:
     - ./config/.env.local

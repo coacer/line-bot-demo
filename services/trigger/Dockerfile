@@ -7,7 +7,6 @@ COPY $WORK_DIR/go.mod $WORK_DIR/go.sum ./
 RUN go mod download
 
 COPY $WORK_DIR  ./
-COPY ./db/models ./models
 
 ARG CGO_ENABLED=0
 ARG GOOS=linux
