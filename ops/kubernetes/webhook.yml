@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook
+  labels:
+    project: line-bot-demo
+    app: webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webhook
+  template:
+    metadata:
+      labels:
+        app: webhook
+    spec:
+      containers:
+      - name: webhook
+        imagePullPolicy: Never
+        image: line-bot-demo_webhook:latest
+        ports:
+        - containerPort: 5000

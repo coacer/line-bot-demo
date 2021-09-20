@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package linewebhook;
+option go_package = "linewebhook/";
+
+service LineWebhook {
+  // 疎通テスト用
+  rpc Health (HealthRequest) returns (HealthReply) {}
+
+  rpc Message (MessageRequest) returns (MessageReply) {}
+}
+
+message HealthRequest {
+  string req = 1;
+}
+
+message HealthReply {
+  string data = 1;
+}
+
+message MessageEvent {
+  string replyToken = 1;
+  string type = 2;
+  string timestamp = 3;
+  EventSource source = 4;
+  MessageContent message = 5;
+}
+
+message EventSource {
+  string type = 1;
+  string userId = 2;
+}
+
+message MessageContent {
+  string type = 1;
+  string text = 2;
+}
+
+message MessageRequest {
+  repeated MessageEvent events = 1;
+  string destination = 2;
+}
+
+message MessageReply {}

@@ -57,14 +57,14 @@ services:
     env_file:
     - ./config/.env.local
 
-  trigger:
+  webhook:
     build: 
-      context: "./services/trigger"
+      context: "./services/webhook"
       dockerfile: "Dockerfile.local"
     ports:
     - "5000:5000"
     volumes:
-    - ./services/trigger:/go/src
+    - ./services/webhook:/go/src
     env_file:
     - ./config/.env.local
 

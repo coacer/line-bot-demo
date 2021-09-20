@@ -1,6 +1,7 @@
 const path = require('path');
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
+const { camelToSnakeCase } = require('../utils/string');
 
 class Proto {
   constructor(
@@ -21,7 +22,8 @@ class Proto {
   loadClient() {
     if (!this.name) return;
     const lowercaseName = this.name.toLowerCase();
-    const PROTO_PATH = path.resolve(__dirname, `../../rpc/${lowercaseName}.proto`);
+    const camelcaseName = camelToSnakeCase(this.name);
+    const PROTO_PATH = path.resolve(__dirname, `../../rpc/${camelcaseName}.proto`);
     const packageDefinition = protoLoader.loadSync(PROTO_PATH, this.options);
     this.proto = grpc.loadPackageDefinition(packageDefinition);
     this.client = new this.proto[lowercaseName][this.name](
