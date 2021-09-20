@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 	"webhook/exception"
+	"webhook/interface/repository"
 
 	"cloud.google.com/go/spanner"
 )
@@ -19,7 +21,7 @@ type Client struct {
 	spannerClient *spanner.Client
 }
 
-func NewClient(ctx context.Context) (c *Client, err error) {
+func NewClient(ctx context.Context) (c repository.SqlClient, err error) {
 	client, err := spanner.NewClient(
 		ctx,
 		fmt.Sprintf(
@@ -35,3 +37,12 @@ func NewClient(ctx context.Context) (c *Client, err error) {
 	c = &Client{client}
 	return
 }
+
+func (c *Client) GetByIds(ctx context.Context, table string, ids []string) repository.Row {}
+func (c *Client) GetAll(ctx context.Context, table string) repository.Row                 {}
+func (c *Client) Query(ctx context.Context, query string) repository.Row                  {}
+func (c *Client) Insert(ctx context.Context, table string, columns []string, values []interface{}) time.Time {
+}
+func (c *Client) Update(ctx context.Context, table string, columns []string, values []interface{}) time.Time {
+}
+func (c *Client) Delete(ctx context.Context, table string, id string) time.Time {}
