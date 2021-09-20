@@ -14,6 +14,9 @@ const (
 	ApplicationError      = "002001"
 	UserModelInvalidError = "002002"
 
+	// Database error codes 0021xx
+	DatabaseConnectionError = "002101"
+
 	/* Third party API error codes 003xxx */
 )
 
@@ -21,8 +24,9 @@ const (
   Error message
 */
 var codes = map[string]string{
-	ApplicationError:      "Internal server error",
-	UserModelInvalidError: "Faild create or update User model",
+	ApplicationError:        "Internal server error",
+	UserModelInvalidError:   "Faild create or update User model",
+	DatabaseConnectionError: "Failed connect database",
 }
 
 type Error struct {
