@@ -12,7 +12,8 @@ CREATE TABLE User (
     LineBotChannelId  STRING(128) NOT NULL,
     LineUID           STRING(MAX) NOT NULL,
     CreatedAt          TIMESTAMP NOT NULL OPTIONS ( allow_commit_timestamp = true ),
-    UpdatedAt          TIMESTAMP NOT NULL OPTIONS ( allow_commit_timestamp = true )
+    UpdatedAt          TIMESTAMP NOT NULL OPTIONS ( allow_commit_timestamp = true ),
+    CONSTRAINT FK_LineBotChannelId FOREIGN KEY (LineBotChannelId) REFERENCES LineBotChannel (Id)
 ) PRIMARY KEY (Id);
 
 CREATE TABLE UserEvent (
