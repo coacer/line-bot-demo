@@ -58,7 +58,7 @@ func TestInsertUser(t *testing.T) {
 	var uid string
 	var createdat time.Time
 	var updatedat time.Time
-	result := sqlClient.GetAll(ctx, "User", []string{"Id", "LineBotChannelId", "LineUID", "CreatedAt", "UpdatedAt"})
+	result := sqlClient.ReadAll(ctx, "User", []string{"Id", "LineBotChannelId", "LineUID", "CreatedAt", "UpdatedAt"})
 	result.Loop(func(row repository.Row) error {
 		return row.Bind(&id, &channelId, &uid, &createdat, &updatedat)
 	})

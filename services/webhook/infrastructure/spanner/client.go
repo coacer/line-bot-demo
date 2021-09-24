@@ -38,55 +38,44 @@ func (s *Sql) NewClient(ctx context.Context) (c repository.SqlClient, err error)
 	return
 }
 
-func (c *Client) GetByIds(ctx context.Context, table string, ids []string, columns []string) repository.Result {
-	keys := make([]spanner.KeySet, len(ids))
-	for i, id := range ids {
-		keys[i] = spanner.Key{id}
-	}
-	iter := c.spanner.Single().Read(ctx, table, spanner.KeySets(keys...), columns)
-	return &Result{iter}
+func (c *Client) Read(ctx context.Context, table string, ids []string, columns []string) repository.Result {
+	var t repository.Transaction = &Transaction{roTxn: c.spanner.Single()}
+	return t.Read(ctx, table, ids, columns)
 }
 
-func (c *Client) GetAll(ctx context.Context, table string, columns []string) repository.Result {
-	iter := c.spanner.Single().Read(ctx, table, spanner.AllKeys(), columns)
-	return &Result{iter}
+func (c *Client) ReadAll(ctx context.Context, table string, columns []string) repository.Result {
+	var t repository.Transaction = &Transaction{roTxn: c.spanner.Single()}
+	return t.ReadAll(ctx, table, columns)
 }
 
 // TODO
 // func (c *Client) Query(ctx context.Context, query string) repository.Result  {}
 
 func (c *Client) Insert(ctx context.Context, table string, columns []string, values []interface{}) repository.WriteQuery {
-	mu := spanner.Insert(table, columns, values)
-	return &WriteQuery{mu}
+	var t repository.Transaction = &Transaction{}
+	return t.Insert(ctx, table, columns, values)
 }
 
 func (c *Client) Update(ctx context.Context, table string, columns []string, values []interface{}) repository.WriteQuery {
-	mu := spanner.Update(table, columns, values)
-	return &WriteQuery{mu}
+	var t repository.Transaction = &Transaction{}
+	return t.Update(ctx, table, columns, values)
 }
 
 func (c *Client) Delete(ctx context.Context, table string, id string) repository.WriteQuery {
-	mu := spanner.Delete(table, spanner.Key{id})
-	return &WriteQuery{mu}
+	var t repository.Transaction = &Transaction{}
+	return t.Delete(ctx, table, id)
 }
 
-func (c *Client) Commit(ctx context.Context, query repository.WriteQuery) (time.Time, error) {
-	return c.spanner.ReadWriteTransaction(ctx, func(ctx context.Context, txn *spanner.ReadWriteTransaction) error {
-		return txn.BufferWrite([]*spanner.Mutation{query.(*WriteQuery).mutation})
+func (c *Client) Commit(ctx context.Context, queries []repository.WriteQuery) (time.Time, error) {
+	return c.DoTxn(ctx, func(ctx context.Context, t repository.Transaction) error {
+		return t.Commit(ctx, queries)
 	})
 }
 
-func (c *Client) Transaction(ctx context.Context, callback func(ctx context.Context) ([]repository.WriteQuery, error)) (time.Time, error) {
+func (c *Client) DoTxn(ctx context.Context, callback func(ctx context.Context, txn repository.Transaction) error) (time.Time, error) {
 	return c.spanner.ReadWriteTransaction(ctx, func(ctx context.Context, txn *spanner.ReadWriteTransaction) error {
-		queries, err := callback(ctx)
-		if err != nil {
-			return err
-		}
-		ms := make([]*spanner.Mutation, len(queries))
-		for _, q := range queries {
-			ms = append(ms, q.(WriteQuery).mutation)
-		}
-		return txn.BufferWrite(ms)
+		var t repository.Transaction = &Transaction{rwTxn: txn}
+		return callback(ctx, t)
 	})
 }
 
