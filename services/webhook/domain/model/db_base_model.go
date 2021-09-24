@@ -4,6 +4,10 @@ import (
 	"time"
 )
 
+type DbModel interface {
+	GetColumns() []string
+}
+
 type DbBaseModel struct {
 	id        string    `json:"id"`
 	createdAt time.Time `json:"createdAt"`

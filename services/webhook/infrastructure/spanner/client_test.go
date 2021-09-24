@@ -41,13 +41,11 @@ func TestInsertUser(t *testing.T) {
 		{"aaaaaaaaaaaaaaaaaaaaaaaa", "aaaaaaaaaaaaaaaaaaaaaaaa", "aaaaaaaaaaaaaaaaaaaaaaaa"},
 	}
 
-	ids := make([]string, len(patterns))
 	for _, p := range patterns {
-		values := make([]interface{}, 5)
+		var values []interface{}
 		values = append(values, p.id, p.lineBotChannelId, p.lineUID, sql.CommitTimestamp(), sql.CommitTimestamp())
-		ids = append(ids, p.id)
 		query := sqlClient.Insert(ctx, "User", []string{"Id", "LineBotChannelId", "LineUID", "CreatedAt", "UpdatedAt"}, values)
-		_, err := sqlClient.Commit(ctx, query)
+		_, err := sqlClient.Commit(ctx, []repository.WriteQuery{query})
 		if err != nil {
 			t.Fatalf("error: %v", err)
 		}

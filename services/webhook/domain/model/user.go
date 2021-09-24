@@ -3,6 +3,7 @@ package model
 import (
 	"strconv"
 	"webhook/exception"
+	"webhook/utils"
 )
 
 type User struct {
@@ -21,6 +22,10 @@ func NewUser(lineBotChannelId, lineUID string) (*User, error) {
 		lineBotChannelId,
 		lineUID,
 	}, nil
+}
+
+func (u *User) GetColumns() []string {
+	return utils.GetKeys(*u)
 }
 
 // LINEの仕様準拠

@@ -46,8 +46,8 @@ func (t *Transaction) Delete(ctx context.Context, table string, id string) repos
 
 func (t *Transaction) Commit(ctx context.Context, queries []repository.WriteQuery) error {
 	ms := make([]*spanner.Mutation, len(queries))
-	for _, q := range queries {
-		ms = append(ms, q.(*WriteQuery).mutation)
+	for i, q := range queries {
+		ms[i] = q.(*WriteQuery).mutation
 	}
 	return t.rwTxn.BufferWrite(ms)
 }
