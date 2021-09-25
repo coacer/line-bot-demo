@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package linewebhook;
-option go_package = "linewebhook/";
+option go_package = "linewebhook/pb/";
 
 service LineWebhook {
   // 疎通テスト用
@@ -37,8 +37,7 @@ message MessageContent {
 }
 
 message MessageRequest {
-  repeated MessageEvent events = 1;
-  string destination = 2;
+  MessageEvent event = 1;
 }
 
 message MessageReply {}

@@ -31,5 +31,8 @@ func (s *Sql) CommitTimestamp() time.Time {
 }
 
 func (s *Sql) Close() {
+	if s.client == nil {
+		return
+	}
 	s.client.Close()
 }

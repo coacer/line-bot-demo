@@ -6,6 +6,7 @@ import (
 
 type DbModel interface {
 	GetColumns() []string
+	GetValues() []interface{}
 }
 
 type DbBaseModel struct {

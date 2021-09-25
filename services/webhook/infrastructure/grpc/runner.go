@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	webhook "webhook/infrastructure/grpc/linewebhook"
+	"webhook/infrastructure/grpc/linewebhook/pb"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -13,10 +13,10 @@ import (
 
 type Runner struct {
 	port   string
-	server webhook.LineWebhookServer
+	server pb.LineWebhookServer
 }
 
-func NewRunner(port string, server webhook.LineWebhookServer) *Runner {
+func NewRunner(port string, server pb.LineWebhookServer) *Runner {
 	return &Runner{port, server}
 }
 
@@ -29,7 +29,7 @@ func (r *Runner) Start() error {
 	i := new(Interceptor)
 	s := grpc.NewServer(grpc.UnaryInterceptor(i.logging()))
 	reflection.Register(s)
-	webhook.RegisterLineWebhookServer(s, r.server)
+	pb.RegisterLineWebhookServer(s, r.server)
 	log.Println("Starting gRPC server")
 	if err := s.Serve(lis); err != nil {
 		return err

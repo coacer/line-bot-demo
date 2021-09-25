@@ -14,4 +14,12 @@ module.exports = class LineWebhook extends Proto {
   health() {
     return this.invoke('health', {});
   }
+
+  /**
+   * メッセージイベントハンドラ
+   * @param {*} event
+   */
+  message(event) {
+    return this.invoke('message', { event });
+  }
 };
