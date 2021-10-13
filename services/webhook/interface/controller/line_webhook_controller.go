@@ -19,7 +19,7 @@ func (c *LineMessageController) Message(ctx context.Context, req *pb.MessageRequ
 	log.Println(req)
 	channelId := "1111111111"
 	uid := req.Event.Source.UserId
-	u, err := c.interactor.Reply(ctx, channelId, uid)
+	u, err := c.interactor.Reply(ctx, channelId, uid, req.Event.ReplyToken)
 	log.Println(u)
 	if err != nil {
 		return nil, err

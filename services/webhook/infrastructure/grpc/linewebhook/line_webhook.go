@@ -14,6 +14,9 @@ var (
 	project  = os.Getenv("GCP_PROJECT_ID")
 	instance = os.Getenv("DB_INSTANCE_NAME")
 	dbName   = os.Getenv("DB_NAME")
+
+	channelSecret = os.Getenv("LINE_CHANNEL_SECRET")
+	channelToken  = os.Getenv("LINE_CHANNEL_ACCESS_TOKEN")
 )
 
 type LineWebhook struct {
@@ -27,6 +30,7 @@ func New() pb.LineWebhookServer {
 		ctlr: controller.NewLineMessageController(
 			interactor.NewNewsInteractor(
 				repository.NewUserRepository(sql),
+				repository.NewLineRepository(channelSecret, channelToken),
 			),
 		),
 		dbClose: sql.Close,
